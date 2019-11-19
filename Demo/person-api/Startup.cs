@@ -27,7 +27,7 @@ namespace person_api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSingleton<IPeopleProvider, HardCodedPeopleProvider>();
+            services.AddSingleton<IPeopleProvider, CSVPeopleProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,7 +38,7 @@ namespace person_api
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 

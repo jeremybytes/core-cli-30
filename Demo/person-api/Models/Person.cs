@@ -18,4 +18,5 @@ namespace person_api.Models
             return string.Format(FormatString, GivenName, FamilyName);
         }
     }
+
 }

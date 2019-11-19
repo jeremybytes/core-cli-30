@@ -20,7 +20,7 @@ namespace person_api.Controllers
         }
 
         [HttpGet]
-        public List<Person> Get()
+        public IEnumerable<Person> Get()
         {
             return provider.GetPeople();
         }
@@ -28,7 +28,14 @@ namespace person_api.Controllers
         [HttpGet("{id}")]
         public Person Get(int id)
         {
-            return provider.GetPerson(id);
+            try
+            {
+                return provider.GetPerson(id);
+            }
+            catch(Exception)
+            {
+                return null;
+            }
         }
     }
 }

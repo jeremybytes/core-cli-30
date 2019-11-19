@@ -29,6 +29,6 @@ namespace person_console
                 return JsonConvert.DeserializeObject<List<Person>>(stringResult);
             }
             return new List<Person>();
-        }
+        }        
     }
 }
