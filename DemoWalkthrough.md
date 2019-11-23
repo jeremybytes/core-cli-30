@@ -2,11 +2,13 @@ Get Comfortable with .NET Core and the CLI
 Demo Walkthrough 
 =================
 
-By following this code, you can re-create the projects in this repository. The following files will be required to start:
+By following this code, you can re-create the projects in this repository: [https://github.com/jeremybytes/core-cli-30](https://github.com/jeremybytes/core-cli-30). The following files will be required to start:
 
 * snippets.txt (code snippets to pasted into the project)
 * CSVPeopleProvider.cs (data provider to show dependency injection)
 * People.txt (data for the CSVPeopleProvider)
+
+These files are in the [Starting Files](https://github.com/jeremybytes/core-cli-30/tree/master/StartingFiles) folder of the repository.
 
 At the end of the walkthrough, we will have a working web service, unit tests for the service, and a console application that calls the service. In addition, we will look at the built-in dependency injection container in ASP.NET Core.
 
