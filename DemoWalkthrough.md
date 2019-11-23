@@ -166,7 +166,8 @@ PS C:\CoreCLI\person-api>
 The service is self-hosting, so we can run the project directly.
 
 ```
-PS C:\CoreCLI\person-api> dotnet run                                                                           info: Microsoft.Hosting.Lifetime[0]
+PS C:\CoreCLI\person-api> dotnet run  
+info: Microsoft.Hosting.Lifetime[0]
       Now listening on: https://localhost:5001
 info: Microsoft.Hosting.Lifetime[0]
       Now listening on: http://localhost:5000
@@ -216,7 +217,8 @@ To remove the https redirection, open the "Startup.cs" file. Then comment out th
 Back at the command prompt, re-run the service. Note that you do not need to build first, using "dotnet run" will rebuild the project if necessary.
 
 ```
-PS C:\CoreCLI\person-api> dotnet run                        info: Microsoft.Hosting.Lifetime[0]
+PS C:\CoreCLI\person-api> dotnet run  
+info: Microsoft.Hosting.Lifetime[0]
       Now listening on: https://localhost:5001
 info: Microsoft.Hosting.Lifetime[0]
       Now listening on: http://localhost:5000
@@ -234,7 +236,7 @@ Now navigate to the http endpoint.
 
 This time we are not redirected, and the service supplies the data.
 
-```javascript
+```json
 [{"date":"2019-11-23T11:59:50.1563699-05:00","temperatureC":49,"temperatureF":120,"summary":"Mild"},{"date":"2019-11-24T11:59:50.1566145-05:00","temperatureC":51,"temperatureF":123,"summary":"Scorching"},{"date":"2019-11-25T11:59:50.1566224-05:00","temperatureC":-20,"temperatureF":-3,"summary":"Hot"},{"date":"2019-11-26T11:59:50.1566229-05:00","temperatureC":54,"temperatureF":129,"summary":"Scorching"},{"date":"2019-11-27T11:59:50.1566233-05:00","temperatureC":45,"temperatureF":112,"summary":"Hot"}]
 ```
 
@@ -424,7 +426,8 @@ Save all the files.
 Back at the command prompt, build the service. (We'll do an explicit build here just to see if there are any build problems we need to fix before running the service.)
 
 ```
-PS C:\CoreCLI\person-api> dotnet build                                                                         Microsoft (R) Build Engine version 16.3.0+0f4c62fea for .NET Core
+PS C:\CoreCLI\person-api> dotnet build  
+Microsoft (R) Build Engine version 16.3.0+0f4c62fea for .NET Core
 Copyright (C) Microsoft Corporation. All rights reserved.
 
   Restore completed in 13.4 ms for C:\CoreCLI\person-api\person-api.csproj.
@@ -442,7 +445,8 @@ Assuming you have a successful build, run the service.
 
 ```
 Time Elapsed 00:00:01.20
-PS C:\CoreCLI\person-api> dotnet run                                                                           info: Microsoft.Hosting.Lifetime[0]
+PS C:\CoreCLI\person-api> dotnet run  
+info: Microsoft.Hosting.Lifetime[0]
       Now listening on: https://localhost:5001
 info: Microsoft.Hosting.Lifetime[0]
       Now listening on: http://localhost:5000
@@ -460,7 +464,7 @@ Now open a browser and navigate to the service location. Note that the URL is di
 
 This will give us the entire collection of Person objects.
 
-```javascript
+```json
 [{"id":1,"givenName":"John","familyName":"Koenig","startDate":"1975-10-17T00:00:00","rating":6,"formatString":null},{"id":2,"givenName":"Dylan","familyName":"Hunt","startDate":"2000-10-02T00:00:00","rating":8,"formatString":null},{"id":3,"givenName":"Leela","familyName":"Turanga","startDate":"1999-03-28T00:00:00","rating":8,"formatString":"{1} {0}"},{"id":4,"givenName":"John","familyName":"Crichton","startDate":"1999-03-19T00:00:00","rating":7,"formatString":null},{"id":5,"givenName":"Dave","familyName":"Lister","startDate":"1988-02-15T00:00:00","rating":9,"formatString":null},{"id":6,"givenName":"Laura","familyName":"Roslin","startDate":"2003-12-08T00:00:00","rating":6,"formatString":null},{"id":7,"givenName":"John","familyName":"Sheridan","startDate":"1994-01-26T00:00:00","rating":6,"formatString":null},{"id":8,"givenName":"Dante","familyName":"Montana","startDate":"2000-11-01T00:00:00","rating":5,"formatString":null},{"id":9,"givenName":"Isaac","familyName":"Gampu","startDate":"1977-09-10T00:00:00","rating":4,"formatString":null}]
 ```
 
@@ -468,7 +472,7 @@ We can call the other "Get" method by adding a value to the URL.
 
 [http://localhost:5000/people/2](http://localhost:5000/people/2)
 
-```javascript
+```json
 {"id":2,"givenName":"Dylan","familyName":"Hunt","startDate":"2000-10-02T00:00:00","rating":8,"formatString":null}
 ```
 
@@ -496,7 +500,8 @@ Back in the PowerShell window, use "Ctrl+C" to stop the service, then "dotnet ru
 
 ```
       Application is shutting down...
-PS C:\CoreCLI\person-api> dotnet run                                                                           info: Microsoft.Hosting.Lifetime[0]
+PS C:\CoreCLI\person-api> dotnet run  
+info: Microsoft.Hosting.Lifetime[0]
       Now listening on: http://localhost:9874
 info: Microsoft.Hosting.Lifetime[0]
       Application started. Press Ctrl+C to shut down.
@@ -516,7 +521,7 @@ If we update the URL to use the new port, then we have the data that we expect.
 
 [http://localhost:9874/people](http://localhost:9874/people)
 
-```javascript
+```json
 [{"id":1,"givenName":"John","familyName":"Koenig","startDate":"1975-10-17T00:00:00","rating":6,"formatString":null},{"id":2,"givenName":"Dylan","familyName":"Hunt","startDate":"2000-10-02T00:00:00","rating":8,"formatString":null},{"id":3,"givenName":"Leela","familyName":"Turanga","startDate":"1999-03-28T00:00:00","rating":8,"formatString":"{1} {0}"},{"id":4,"givenName":"John","familyName":"Crichton","startDate":"1999-03-19T00:00:00","rating":7,"formatString":null},{"id":5,"givenName":"Dave","familyName":"Lister","startDate":"1988-02-15T00:00:00","rating":9,"formatString":null},{"id":6,"givenName":"Laura","familyName":"Roslin","startDate":"2003-12-08T00:00:00","rating":6,"formatString":null},{"id":7,"givenName":"John","familyName":"Sheridan","startDate":"1994-01-26T00:00:00","rating":6,"formatString":null},{"id":8,"givenName":"Dante","familyName":"Montana","startDate":"2000-11-01T00:00:00","rating":5,"formatString":null},{"id":9,"givenName":"Isaac","familyName":"Gampu","startDate":"1977-09-10T00:00:00","rating":4,"formatString":null}]
 ```
 
@@ -1341,7 +1346,7 @@ info: Microsoft.Hosting.Lifetime[0]
 
 [http://localhost:9874/people](http://localhost:9874/people)
 
-```javascript
+```json
 [{"id":1,"givenName":"John","familyName":"Koenig","startDate":"1975-10-17T00:00:00","rating":6,"formatString":null},{"id":2,"givenName":"Dylan","familyName":"Hunt","startDate":"2000-10-02T00:00:00","rating":8,"formatString":null},{"id":3,"givenName":"Leela","familyName":"Turanga","startDate":"1999-03-28T00:00:00","rating":8,"formatString":"{1} {0}"},{"id":4,"givenName":"John","familyName":"Crichton","startDate":"1999-03-19T00:00:00","rating":7,"formatString":null},{"id":5,"givenName":"Dave","familyName":"Lister","startDate":"1988-02-15T00:00:00","rating":9,"formatString":null},{"id":6,"givenName":"Laura","familyName":"Roslin","startDate":"2003-12-08T00:00:00","rating":6,"formatString":null},{"id":7,"givenName":"John","familyName":"Sheridan","startDate":"1994-01-26T00:00:00","rating":6,"formatString":null},{"id":8,"givenName":"Dante","familyName":"Montana","startDate":"2000-11-01T00:00:00","rating":5,"formatString":null},{"id":9,"givenName":"Isaac","familyName":"Gampu","startDate":"1977-09-10T00:00:00","rating":4,"formatString":null}]
 ```
 
