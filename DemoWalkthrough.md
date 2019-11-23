@@ -1,12 +1,31 @@
 Get Comfortable with .NET Core and the CLI  
 Demo Walkthrough 
 =================
+By following this walkthrough, you can re-create the projects in this repository: [https://github.com/jeremybytes/core-cli-30](https://github.com/jeremybytes/core-cli-30).
 
-By following this code, you can re-create the projects in this repository: [https://github.com/jeremybytes/core-cli-30](https://github.com/jeremybytes/core-cli-30). The following files will be required to start:
+**Level**: Introductory  
 
-* snippets.txt (code snippets to pasted into the project)
-* CSVPeopleProvider.cs (data provider to show dependency injection)
-* People.txt (data for the CSVPeopleProvider)
+**Target**: C# developers who have been working with .NET Framework and are interested in trying out .NET Core. 
+
+**Required Software**:  
+* .NET Core SDK  
+[https://dotnet.microsoft.com/download](https://dotnet.microsoft.com/download)  
+* Visual Studio Code  
+[https://code.visualstudio.com/download](https://code.visualstudio.com/download)  
+(You can also use Visual Studio 2019 Community Edition)
+* C# Extension for Visual Studio Code  
+[https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp)  
+(This will give you code completion and lots of other help/refactoring in Visual Studio Code).
+
+**Additional Files:**  
+The following files will be required during the walkthrough:
+
+* snippets.txt  
+(code snippets to pasted into the project)
+* CSVPeopleProvider.cs  
+(data provider to show dependency injection)
+* People.txt  
+(data for the CSVPeopleProvider)
 
 These files are in the [Starting Files](https://github.com/jeremybytes/core-cli-30/tree/master/StartingFiles) folder of the repository.
 
@@ -144,7 +163,7 @@ d-----       11/22/2019  11:39 AM                Properties
 PS C:\CoreCLI\person-api>   
 ```
 
-### Build and Run the Sample Service
+### Building and Running the Sample Service
 From here, we can build the project.
 
 ```
@@ -188,7 +207,6 @@ Now we can navigate to the service in the browser.
 Using the http endpoint will automatically redirect to the https endpoint [https://localhost:5001/WeatherForecast](https://localhost:5001/WeatherForecast). If you do not have a trusted certificate installed for localhost, then you will get a browser warning.
 
 ### Changing HTTPS Redirect
-
 Instead of dealing with https, we will disable the redirect so we can continue developing easily.
 
 For this, we'll first stop the service by using "Ctrl+C" in the PowerShell window.
@@ -243,7 +261,6 @@ This time we are not redirected, and the service supplies the data.
 This is just dummy data that is part of the webapi template.
 
 ### Updating the Service Code
-
 With a working service, we can now go in and change it to run our code.
 
 Stop the service using "Ctrl-C".
@@ -258,7 +275,6 @@ In Visual Studio Code, add a new folder to the project called "Models". To add a
 The "Models" folder should be at the root of the project folder (as a sibling to "Controllers").
 
 ### Adding a Person Class
-
 From here, add a new file to the Models folder called "Person.cs". To add a file, click on the Models folder, and then choose the "New File" icon.
 
 Visual Studio Code creates an empty file. Start by adding the namespace
@@ -305,7 +321,6 @@ using System;
 ```
 
 ### Adding a Data Provider
-
 The Person class is the data type that for the service. To supply some data, we will add a data provider. Add a new file to the Models folder named "HardCodedPeopleProvider.cs".
 
 As above, we will add the namespace plus the class declaration.
@@ -370,7 +385,6 @@ namespace person_api
 Note: you will need to bring a using statement for "System.Linq" for "First" to work.
 
 ### Updating the Controller
-
 The next step is to update the controller to use our new data.
 
 Inside the "Controllers" folder is the "WeatherForecastController.cs" file. We'll rename this file. To do this, click on the file, press F2, and change the name to "PeopleController.cs".
@@ -479,7 +493,6 @@ We can call the other "Get" method by adding a value to the URL.
 Now we have a working service.
 
 ### Changing the Port
-
 One last change is that we will change the port that is used for the service. This is something that I do with my localhost projects to eliminate possible collisions if I have multiple services running at the same time.
 
 To change the port, we'll go back to Visual Studio Code and open the "Program.cs" file.
@@ -610,7 +623,6 @@ namespace person_api_tests
 ```
 
 ### Running the Test
-
 To run the test, we use "dotnet test" at the command prompt.
 
 ```
@@ -859,7 +871,6 @@ PS C:\CoreCLI\person-console>
 ```
 
 ### Running the Application
-
 Run the application.
 
 ```
@@ -896,7 +907,6 @@ namespace person_console
 This is what is included in the default template.
 
 ### Calling the Service
-
 To call the service, we will add a copy of the "Person" class and create a class that knows how to talk to the service.
 
 Using File Explorer (or the method of your choice), copy the "Person.cs" file from the "person-api" project into the root folder of the "person-console" project.
@@ -1021,7 +1031,6 @@ Start with .NET Core 3.0, a JSON serializer is included in the framework. We're 
 If you use "Ctrl+." on "JsonConvert" in the code file, it will now resolve and add the correct using statement.
 
 ### Updating the Program
-
 Now that we have the data object and data reader set up, we need to call them from the Program class.
 
 Open "Program.cs" and update the Main method as follows.
@@ -1065,7 +1074,6 @@ This code will not compile at this point. Since we are using "await", we need to
 The Main method needs to be "async Task" rather than "async void". "async void" is not allowed here.
 
 ### Running the Application
-
 With everything in place, we can now run the application. First, go back to the PowerShell window with the service folder and start the service using "dotnet run".
 
 ```
@@ -1113,7 +1121,7 @@ Solution
 ---------
 Now that we have 3 projects, we will create a solution for them. We'll do this from the command line as well.
 
-### Create the Solution
+### Creating the Solution
 Open a new PowerShell (or cmd.exe window) at the root of the project.
 
 ```
@@ -1261,7 +1269,7 @@ The body of the constructor sets the private field based on the parameter coming
 
 If you are not familiar with dependency injection, you can take a look at the materials available here: [DI Why: Getting a Grip on Dependency Injection](http://www.jeremybytes.com/Demos.aspx#DI).
 
-### Running the application
+### Running the Application
 At this point, we can build and run the application. We'll go back to the command line for this.
 
 When we run "dotnet build" we get a successful build.
