@@ -43,7 +43,7 @@ In addition, code blocks will be shown for the projects themselves.
 
 Hello dotnet
 --------------
-We'll start by opening powershell to the root folder that we use for this project (the location and name of the root folder is up to you).
+We'll start by opening PowerShell to the root folder that we use for this project (the location and name of the root folder is up to you).
 
 The "dotnet" command will be used throughout this walkthrough. This is automatically installed and put into your path when you install the .NET Core SDK.
 
