@@ -18,16 +18,14 @@ By following this walkthrough, you can re-create the projects in this repository
 (This will give you code completion and lots of other help/refactoring in Visual Studio Code).
 
 **Additional Files:**  
-The following files will be required during the walkthrough:
+The following files will be required during the walkthrough. These files are in the [Starting Files folder](https://github.com/jeremybytes/core-cli-30/tree/master/StartingFiles) of the repository:
 
-* snippets.txt  
+* [snippets.txt](https://github.com/jeremybytes/core-cli-30/blob/master/StartingFiles/snippets.txt)  
 (code snippets to pasted into the project)
-* CSVPeopleProvider.cs  
+* [CSVPeopleProvider.cs](https://github.com/jeremybytes/core-cli-30/blob/master/StartingFiles/CSVPeopleProvider.cs)  
 (data provider to show dependency injection)
-* People.txt  
+* [People.txt](https://github.com/jeremybytes/core-cli-30/blob/master/StartingFiles/People.txt)  
 (data for the CSVPeopleProvider)
-
-These files are in the [Starting Files](https://github.com/jeremybytes/core-cli-30/tree/master/StartingFiles) folder of the repository.
 
 At the end of the walkthrough, we will have a working web service, unit tests for the service, and a console application that calls the service. In addition, we will look at the built-in dependency injection container in ASP.NET Core.
 
@@ -45,7 +43,7 @@ Hello dotnet
 --------------
 We'll start by opening PowerShell to the root folder that we use for this project (the location and name of the root folder is up to you).
 
-The "dotnet" command will be used throughout this walkthrough. This is automatically installed and put into your path when you install the .NET Core SDK.
+The "dotnet" command will be used throughout this walkthrough. This is available and automatically in your path when you install the .NET Core SDK.
 
 ```
 PS C:\CoreCLI> dotnet
@@ -163,6 +161,8 @@ d-----       11/22/2019  11:39 AM                Properties
 PS C:\CoreCLI\person-api>   
 ```
 
+Note that the project is named "person-api.csproj" (the same as the folder). We will see how to change this default value a bit later.
+
 ### Building and Running the Sample Service
 From here, we can build the project.
 
@@ -198,7 +198,7 @@ info: Microsoft.Hosting.Lifetime[0]
       Content root path: C:\CoreCLI\person-api
 ```
 
-Note that the host is listing on localhost port 5001 (for https) and port 5000 (for http).
+Note that the host is listening on localhost port 5001 (for https) and port 5000 (for http).
 
 Now we can navigate to the service in the browser.
 
@@ -207,7 +207,7 @@ Now we can navigate to the service in the browser.
 Using the http endpoint will automatically redirect to the https endpoint [https://localhost:5001/WeatherForecast](https://localhost:5001/WeatherForecast). If you do not have a trusted certificate installed for localhost, then you will get a browser warning.
 
 ### Changing HTTPS Redirect
-Instead of dealing with https, we will disable the redirect so we can continue developing easily.
+Instead of dealing with https and a trusted certificate, we will disable the redirect so we can continue developing easily on the local machine.
 
 For this, we'll first stop the service by using "Ctrl+C" in the PowerShell window.
 
@@ -222,17 +222,19 @@ If you have Visual Studio Code installed, you can easily open the folder by usin
 PS C:\CoreCLI\person-api> code .
 ```
 
-With .NET Core, we do not need to specifically open a solution file or a project file (right now, we do not have a solution file). Instead, we can open the folder to show the contents.
+With .NET Core, we do not need to open a solution file or a project file (right now, we do not even have a solution file). Instead, we can open a folder to show the contents.
 
-Inside Visual Studio Code, you will be prompted to "Add required assets". If you choose "Yes", this will create a new .vscode folder that has some setting files in it. These are used for debugging and running from within Visual Studio code. You can say "Yes" to add them, but we will not be using them during this walkthrough.
+Inside Visual Studio Code, you will be prompted to "Add required assets". If you choose "Yes", this will create a new ".vscode" folder that has some setting files in it. These are used for debugging and running from within Visual Studio code. You can say "Yes" to add them, but we will not use them during this walkthrough.
 
 To remove the https redirection, open the "Startup.cs" file. Then comment out the following line:
 
-```c#
+```csharp
     // app.UseHttpsRedirection();
 ```
 
-Back at the command prompt, re-run the service. Note that you do not need to build first, using "dotnet run" will rebuild the project if necessary.
+Back at the command prompt, re-run the service. 
+
+*Note that you do not need to build first, using "dotnet run" will rebuild the project if necessary.*
 
 ```
 PS C:\CoreCLI\person-api> dotnet run  
@@ -255,15 +257,19 @@ Now navigate to the http endpoint.
 This time we are not redirected, and the service supplies the data.
 
 ```json
-[{"date":"2019-11-23T11:59:50.1563699-05:00","temperatureC":49,"temperatureF":120,"summary":"Mild"},{"date":"2019-11-24T11:59:50.1566145-05:00","temperatureC":51,"temperatureF":123,"summary":"Scorching"},{"date":"2019-11-25T11:59:50.1566224-05:00","temperatureC":-20,"temperatureF":-3,"summary":"Hot"},{"date":"2019-11-26T11:59:50.1566229-05:00","temperatureC":54,"temperatureF":129,"summary":"Scorching"},{"date":"2019-11-27T11:59:50.1566233-05:00","temperatureC":45,"temperatureF":112,"summary":"Hot"}]
+[{"date":"2019-11-23T11:59:50.1563699-05:00","temperatureC":49,"temperatureF":120,"summary":"Mild"},
+{"date":"2019-11-24T11:59:50.1566145-05:00","temperatureC":51,"temperatureF":123,"summary":"Scorching"},
+{"date":"2019-11-25T11:59:50.1566224-05:00","temperatureC":-20,"temperatureF":-3,"summary":"Hot"},
+{"date":"2019-11-26T11:59:50.1566229-05:00","temperatureC":54,"temperatureF":129,"summary":"Scorching"},
+{"date":"2019-11-27T11:59:50.1566233-05:00","temperatureC":45,"temperatureF":112,"summary":"Hot"}]
 ```
 
-This is just dummy data that is part of the webapi template.
+This is dummy data that is part of the webapi template.
 
 ### Updating the Service Code
 With a working service, we can now go in and change it to run our code.
 
-Stop the service using "Ctrl-C".
+Stop the service using "Ctrl+C".
 
 ```
       Application is shutting down...
@@ -274,12 +280,14 @@ In Visual Studio Code, add a new folder to the project called "Models". To add a
 
 The "Models" folder should be at the root of the project folder (as a sibling to "Controllers").
 
+*As an alternate, you can add a new folder from the command prompt or File Explorer. The new folder will automatically show up as part of the project in Visual Studio Code.*
+
 ### Adding a Person Class
 From here, add a new file to the Models folder called "Person.cs". To add a file, click on the Models folder, and then choose the "New File" icon.
 
 Visual Studio Code creates an empty file. Start by adding the namespace
 
-```c#
+```csharp
 namespace person_api
 {
     
@@ -288,9 +296,9 @@ namespace person_api
 
 Note that the default namespace for the project is the same as the project name, except the dashes have been replaced by underscores.
 
-Now locate the "snippets.txt" file and copy the "Person" class into the file.
+Now locate the "snippets.txt" file and copy the "Person" class into the file. (Or just copy the code from this code block.)
 
-```c#
+```csharp
 namespace person_api
 {
     public class Person
@@ -312,11 +320,11 @@ namespace person_api
 }
 ```
 
-If the indentation is off when you paste in the code, use the keyboard shortcut "Shift+Alt+F" to format the file.
+*If the indentation is off when you paste in the code, use the keyboard shortcut "Shift+Alt+F" to format the file.*
 
-The "DateTime" type will have red squigglies because the using statement is missing. Just click on "DateTime", and press "Ctrl+." this will bring up a list of shortcuts. The top one will add "using System;" to the top of the file.
+The "DateTime" type will have red squigglies because the using statement is missing. Just click on "DateTime", and press "Ctrl+." to bring up a list of shortcuts. The top option will add "using System;" to the top of the file.
 
-```c#
+```csharp
 using System;
 ```
 
@@ -325,7 +333,7 @@ The Person class is the data type that for the service. To supply some data, we 
 
 As above, we will add the namespace plus the class declaration.
 
-```c#
+```csharp
 namespace person_api
 {
     public class HardCodedPeopleProvider
@@ -335,11 +343,11 @@ namespace person_api
 }
 ```
 
-Then copy in the "GetPeople" and "GetPerson" methods from the "snippets.txt" file.
+Then copy in the "GetPeople" and "GetPerson" methods from the "snippets.txt" file (or from the following code block).
 
 Be sure to use "Ctrl+." to bring in the needed "using" statements.
 
-```c#
+```csharp
 using System;
 using System.Collections.Generic;
 
@@ -382,8 +390,6 @@ namespace person_api
 }
 ```
 
-Note: you will need to bring a using statement for "System.Linq" for "First" to work.
-
 ### Updating the Controller
 The next step is to update the controller to use our new data.
 
@@ -393,7 +399,7 @@ Open the "PeopleController.cs" file. Here we will rename the class, remove unnee
 
 Here is the result:
 
-```c#
+```csharp
     [ApiController]
     [Route("[controller]")]
     public class PeopleController : ControllerBase
@@ -410,7 +416,7 @@ Be sure to update the class name (PeopleController) and the return type of the "
 
 To fill in the functionality, we will use the HardCodedPeopleProvider that we created earlier. Here's the completed code:
 
-```c#
+```csharp
     [ApiController]
     [Route("[controller]")]
     public class PeopleController : ControllerBase
@@ -427,7 +433,7 @@ To fill in the functionality, we will use the HardCodedPeopleProvider that we cr
 
 Finally, we will add a "Get" method that takes an ID parameter so that we can return a single item.
 
-```c#
+```csharp
         [HttpGet("{id}")]
         public Person Get(int id)
         {
@@ -479,7 +485,15 @@ Now open a browser and navigate to the service location. Note that the URL is di
 This will give us the entire collection of Person objects.
 
 ```json
-[{"id":1,"givenName":"John","familyName":"Koenig","startDate":"1975-10-17T00:00:00","rating":6,"formatString":null},{"id":2,"givenName":"Dylan","familyName":"Hunt","startDate":"2000-10-02T00:00:00","rating":8,"formatString":null},{"id":3,"givenName":"Leela","familyName":"Turanga","startDate":"1999-03-28T00:00:00","rating":8,"formatString":"{1} {0}"},{"id":4,"givenName":"John","familyName":"Crichton","startDate":"1999-03-19T00:00:00","rating":7,"formatString":null},{"id":5,"givenName":"Dave","familyName":"Lister","startDate":"1988-02-15T00:00:00","rating":9,"formatString":null},{"id":6,"givenName":"Laura","familyName":"Roslin","startDate":"2003-12-08T00:00:00","rating":6,"formatString":null},{"id":7,"givenName":"John","familyName":"Sheridan","startDate":"1994-01-26T00:00:00","rating":6,"formatString":null},{"id":8,"givenName":"Dante","familyName":"Montana","startDate":"2000-11-01T00:00:00","rating":5,"formatString":null},{"id":9,"givenName":"Isaac","familyName":"Gampu","startDate":"1977-09-10T00:00:00","rating":4,"formatString":null}]
+[{"id":1,"givenName":"John","familyName":"Koenig","startDate":"1975-10-17T00:00:00","rating":6,"formatString":null},
+{"id":2,"givenName":"Dylan","familyName":"Hunt","startDate":"2000-10-02T00:00:00","rating":8,"formatString":null},
+{"id":3,"givenName":"Leela","familyName":"Turanga","startDate":"1999-03-28T00:00:00","rating":8,"formatString":"{1} {0}"},
+{"id":4,"givenName":"John","familyName":"Crichton","startDate":"1999-03-19T00:00:00","rating":7,"formatString":null},
+{"id":5,"givenName":"Dave","familyName":"Lister","startDate":"1988-02-15T00:00:00","rating":9,"formatString":null},
+{"id":6,"givenName":"Laura","familyName":"Roslin","startDate":"2003-12-08T00:00:00","rating":6,"formatString":null},
+{"id":7,"givenName":"John","familyName":"Sheridan","startDate":"1994-01-26T00:00:00","rating":6,"formatString":null},
+{"id":8,"givenName":"Dante","familyName":"Montana","startDate":"2000-11-01T00:00:00","rating":5,"formatString":null},
+{"id":9,"givenName":"Isaac","familyName":"Gampu","startDate":"1977-09-10T00:00:00","rating":4,"formatString":null}]
 ```
 
 We can call the other "Get" method by adding a value to the URL.
@@ -497,9 +511,9 @@ One last change is that we will change the port that is used for the service. Th
 
 To change the port, we'll go back to Visual Studio Code and open the "Program.cs" file.
 
-In the "CreateHostBuilder" method, we'll add '.UseUrls("http://localhost:9874")'.
+In the "CreateHostBuilder" method, we'll add `.UseUrls("http://localhost:9874")`.
 
-```c#
+```csharp
 public static IHostBuilder CreateHostBuilder(string[] args) =>
     Host.CreateDefaultBuilder(args)
         .ConfigureWebHostDefaults(webBuilder =>
@@ -535,7 +549,15 @@ If we update the URL to use the new port, then we have the data that we expect.
 [http://localhost:9874/people](http://localhost:9874/people)
 
 ```json
-[{"id":1,"givenName":"John","familyName":"Koenig","startDate":"1975-10-17T00:00:00","rating":6,"formatString":null},{"id":2,"givenName":"Dylan","familyName":"Hunt","startDate":"2000-10-02T00:00:00","rating":8,"formatString":null},{"id":3,"givenName":"Leela","familyName":"Turanga","startDate":"1999-03-28T00:00:00","rating":8,"formatString":"{1} {0}"},{"id":4,"givenName":"John","familyName":"Crichton","startDate":"1999-03-19T00:00:00","rating":7,"formatString":null},{"id":5,"givenName":"Dave","familyName":"Lister","startDate":"1988-02-15T00:00:00","rating":9,"formatString":null},{"id":6,"givenName":"Laura","familyName":"Roslin","startDate":"2003-12-08T00:00:00","rating":6,"formatString":null},{"id":7,"givenName":"John","familyName":"Sheridan","startDate":"1994-01-26T00:00:00","rating":6,"formatString":null},{"id":8,"givenName":"Dante","familyName":"Montana","startDate":"2000-11-01T00:00:00","rating":5,"formatString":null},{"id":9,"givenName":"Isaac","familyName":"Gampu","startDate":"1977-09-10T00:00:00","rating":4,"formatString":null}]
+[{"id":1,"givenName":"John","familyName":"Koenig","startDate":"1975-10-17T00:00:00","rating":6,"formatString":null},
+{"id":2,"givenName":"Dylan","familyName":"Hunt","startDate":"2000-10-02T00:00:00","rating":8,"formatString":null},
+{"id":3,"givenName":"Leela","familyName":"Turanga","startDate":"1999-03-28T00:00:00","rating":8,"formatString":"{1} {0}"},
+{"id":4,"givenName":"John","familyName":"Crichton","startDate":"1999-03-19T00:00:00","rating":7,"formatString":null},
+{"id":5,"givenName":"Dave","familyName":"Lister","startDate":"1988-02-15T00:00:00","rating":9,"formatString":null},
+{"id":6,"givenName":"Laura","familyName":"Roslin","startDate":"2003-12-08T00:00:00","rating":6,"formatString":null},
+{"id":7,"givenName":"John","familyName":"Sheridan","startDate":"1994-01-26T00:00:00","rating":6,"formatString":null},
+{"id":8,"givenName":"Dante","familyName":"Montana","startDate":"2000-11-01T00:00:00","rating":5,"formatString":null},
+{"id":9,"givenName":"Isaac","familyName":"Gampu","startDate":"1977-09-10T00:00:00","rating":4,"formatString":null}]
 ```
 
 And that's our working service.
@@ -567,7 +589,7 @@ PS C:\CoreCLI> cd .\person-api-tests\
 PS C:\CoreCLI\person-api-tests>
 ```
 
-If we type "dotnet new", we can see several unit test project options.
+If we type "dotnet new", we can see several unit test project options in the list.
 
 ```
 PS C:\CoreCLI\person-api-tests> dotnet new
@@ -601,7 +623,7 @@ PS C:\CoreCLI\person-api-tests> code .
 
 The "UnitTest1.cs" file has a sample test.
 
-```c#
+```csharp
 using NUnit.Framework;
 
 namespace person_api_tests
@@ -660,13 +682,13 @@ First, rename the file from "UnitTest1.cs" to "PeopleControllerTests.cs". (As a 
 
 Inside the file, we will rename the class from "Tests" to "PeopleControllerTests".
 
-```c#
+```csharp
 public class PeopleControllerTests
 ```
 
 We will use the setup method to create an instance of the controller that our tests will use. For this, we'll add a class-level field for the controller and "new" it up in the Setup method.
 
-```c#
+```csharp
 public class PeopleControllerTests
 {
     PeopleController controller;
@@ -684,7 +706,7 @@ Note: you will need to use "Ctrl+." to bring in the "using" statement for the Pe
 
 Next, we'll remove "Test1" and add something a little more useful.
 
-```c#
+```csharp
 [Test]
 public void GetPeople_ReturnsAllItems()
 {
@@ -719,7 +741,7 @@ The first test is passing. This test is not very useful because it is tied to th
 ### Adding 2 More Tests
 Next we will add a couple of tests for the "Get(int id)" method.
 
-```c#
+```csharp
 [Test]
 public void GetPerson_WithValidId_ReturnsPerson()
 {
@@ -766,9 +788,11 @@ PS C:\CoreCLI\person-api-tests>
 
 In this case, the last test fails. That is because the web service throws an exception (InvalidOperationException) rather than returning null.
 
-This is because of the way the HardCodedPeopleProvider is coded. As a reminder, here is the "GetPerson" method from that class:
+*We won't talk about whether returning null from the service is a good idea or not (it probably isn't). Instead, we'll focus on creating the tests and making sure they pass.*
 
-```c#
+The test fails because of the way the HardCodedPeopleProvider is coded. As a reminder, here is the "GetPerson" method from that class:
+
+```csharp
 public Person GetPerson(int id)
 {
     return GetPeople().First(p => p.Id == id);
@@ -781,7 +805,7 @@ But we don't want to modify the provider. Instead we want to modify the controll
 
 Let's go to the "Get(int id)" method from the PeopleController class.
 
-```c#
+```csharp
 [HttpGet("{id}")]
 public Person Get(int id)
 {
@@ -791,7 +815,7 @@ public Person Get(int id)
 
 We will wrap the "GetPerson" call in a try/catch block. Then if the provider throws an exception, we can still return "null".
 
-```c#
+```csharp
 [HttpGet("{id}")]
 public Person Get(int id)
 {
@@ -825,7 +849,7 @@ Total tests: 3
 PS C:\CoreCLI\person-api-tests>
 ```
 
-Note: we do not have to explicitly re-build the web service project because it is referenced by the test project. So it will get re-built automatically as needed.
+*Note: we do not have to explicitly re-build the web service project because it is referenced by the test project. So it will get re-built automatically as needed.*
 
 Our tests still need better isolation so that we can have more control over the provider during testing. But this gets us started. We will make things a bit more robust later on.
 
@@ -889,7 +913,7 @@ PS C:\CoreCLI\person-console> code .
 
 Open the "Program.cs" file.
 
-```c#
+```csharp
 using System;
 
 namespace person_console
@@ -911,34 +935,37 @@ To call the service, we will add a copy of the "Person" class and create a class
 
 Using File Explorer (or the method of your choice), copy the "Person.cs" file from the "person-api" project into the root folder of the "person-console" project.
 
-One thing to notice when you do this: the file automatically shows up in Visual Studio Code. .NET Core uses a different project system than .NET Framework. By default, the project includes any files that are in the project folder. There is no need to explicitly add them. (We can explicitly exclude them if we need to).
+*One thing to notice when you do this: the file automatically shows up in Visual Studio Code.* 
+
+.NET Core uses a different project system than .NET Framework. By default, the project includes any files that are in the project folder. There is no need to explicitly add them. (We can explicitly exclude them if we need to).
 
 Open "Person.cs" in Visual Studio Code and change the namespace to match the console application: person_console.
 
-```c#
+```csharp
 namespace person_console
 {
-public class Person
-{
-    public int Id { get; set; }
-    public string GivenName { get; set; }
-    public string FamilyName { get; set; }
-    public DateTime StartDate { get; set; }
-    public int Rating { get; set; }
-    public string FormatString { get; set; }
-
-    public override string ToString()
+    public class Person
     {
-        if (string.IsNullOrEmpty(FormatString))
-            FormatString = "{0} {1}";
-        return string.Format(FormatString, GivenName, FamilyName);
+        public int Id { get; set; }
+        public string GivenName { get; set; }
+        public string FamilyName { get; set; }
+        public DateTime StartDate { get; set; }
+        public int Rating { get; set; }
+        public string FormatString { get; set; }
+
+        public override string ToString()
+        {
+            if (string.IsNullOrEmpty(FormatString))
+                FormatString = "{0} {1}";
+            return string.Format(FormatString, GivenName, FamilyName);
+        }
     }
 }
 ```
 
-Create a new file / class named "PersonReader.cs"/"PersonReader".
+Create a new file / class named "PersonReader.cs" / "PersonReader".
 
-```c#
+```csharp
 namespace person_console
 {
     public class PersonReader
@@ -950,7 +977,7 @@ namespace person_console
 
 Add a field of type "HttpClient".
 
-```c#
+```csharp
 public class PersonReader
 {
     private HttpClient client = new HttpClient();
@@ -959,7 +986,7 @@ public class PersonReader
 
 Copy the constructor from the "snippets.txt" file.
 
-```c#
+```csharp
 public class PersonReader
 {
     private HttpClient client = new HttpClient();
@@ -977,7 +1004,7 @@ Don't forget to add the using statements using "Ctrl+."
 
 Next, add the "GetAsync" method from the "snippets.txt" file.
 
-```c#
+```csharp
 public class PersonReader
 {
     private HttpClient client = new HttpClient();
@@ -1004,9 +1031,9 @@ public class PersonReader
 }
 ```
 
-Note: the "Task.Delay" call pauses operation for 3 seconds. This code was originally taken from a demo on Task and await. For more information, check [I'll Get Back to You: Task, Await, and Asynchronous Methods](http://www.jeremybytes.com/Demos.aspx#TaskAndAwait).
+*Note: the "Task.Delay" call pauses operation for 3 seconds. This code was originally taken from a demo on Task and await. For more information, check [I'll Get Back to You: Task, Await, and Asynchronous Methods](http://www.jeremybytes.com/Demos.aspx#TaskAndAwait).*
 
-If you try to add the using statement for "JsonConvert", you'll see that it does not resolve. That is because this object comes from a NuGet package that we have not yet added.
+If you try to add the using statement for "JsonConvert", you'll see that it does not resolve. This is because the object comes from a NuGet package that we have not yet added.
 
 ### Adding a NuGet Package
 To add the package, we'll go back to the command prompt and use "dotnet add package".
@@ -1026,7 +1053,7 @@ log  : Restore completed in 932.82 ms for C:\CoreCLI\person-console\person-conso
 PS C:\CoreCLI\person-console> 
 ```
 
-Start with .NET Core 3.0, a JSON serializer is included in the framework. We're using an external serializer here so we can see how to add a NuGet package.
+Starting with .NET Core 3.0, a JSON serializer is included in the framework. We're using an external serializer here so we can see how to add a NuGet package.
 
 If you use "Ctrl+." on "JsonConvert" in the code file, it will now resolve and add the correct using statement.
 
@@ -1035,40 +1062,40 @@ Now that we have the data object and data reader set up, we need to call them fr
 
 Open "Program.cs" and update the Main method as follows.
 
-```c#
-    class Program
+```csharp
+class Program
+{
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("One moment please...");
-            var reader = new PersonReader();
-            var people = await reader.GetAsync();
-            foreach(var person in people)
-                Console.WriteLine(person);
+        Console.WriteLine("One moment please...");
+        var reader = new PersonReader();
+        var people = await reader.GetAsync();
+        foreach(var person in people)
+            Console.WriteLine(person);
 
-            Console.WriteLine("===============");
-        }
+        Console.WriteLine("===============");
     }
+}
 ```
 
 This creates a data reader, awaits the "GetAsync" method, then loops through the results to output to the console.
 
 This code will not compile at this point. Since we are using "await", we need to make the method "async". Fortunately, .NET Core supports an "async Main" method in console applications (since C# 7.1).
 
-```c#
-    class Program
+```csharp
+class Program
+{
+    static async Task Main(string[] args)
     {
-        static async Task Main(string[] args)
-        {
-            Console.WriteLine("One moment please...");
-            var reader = new PersonReader();
-            var people = await reader.GetAsync();
-            foreach(var person in people)
-                Console.WriteLine(person);
+        Console.WriteLine("One moment please...");
+        var reader = new PersonReader();
+        var people = await reader.GetAsync();
+        foreach(var person in people)
+            Console.WriteLine(person);
 
-            Console.WriteLine("===============");
-        }
+        Console.WriteLine("===============");
     }
+}
 ```
 
 The Main method needs to be "async Task" rather than "async void". "async void" is not allowed here.
@@ -1213,7 +1240,7 @@ In the popup box, change the name of the interface to "IPeopleProvider" and clic
 
 This will create a new file (IPeopleProvider.cs) with the following code.
 
-```c#
+```csharp
 namespace person_api
 {
     public interface IPeopleProvider
@@ -1224,23 +1251,27 @@ namespace person_api
 }
 ```
 
+*If you do not have Visual Studio, you can create the "IPeopleProvider.cs" file manually and add the code listed above.*
+
 This interface is an abstraction that represents any class that includes these 2 methods.
 
 In addition to creating a new file, Visual Studio updated the "HardCodedPeopleProvider" class to denote that it implements the new interface.
 
-```c#
+```csharp
     public class HardCodedPeopleProvider : IPeopleProvider
     {
         ...
     }
 ```
 
+*If you add the interface manually, you will need to add the ': IPeopleProvider' to the class yourself.*
+
 ### Updating the Controller
 Now that we have the interface, we can update the controller to use the interface for the field.
 
 Here is an update to the "PeopleController" class.
 
-```c#
+```csharp
 public class PeopleController : ControllerBase
 {
     IPeopleProvider provider = new HardCodedPeopleProvider();
@@ -1250,7 +1281,7 @@ public class PeopleController : ControllerBase
 
 The next step is to remove the step where we "new" up the HardCodedPeopleProvider. Instead, we will create a constructor with a parameter that will set the field.
 
-```c#
+```csharp
 public class PeopleController : ControllerBase
 {
     IPeopleProvider provider;
@@ -1267,7 +1298,7 @@ With this code in place, the controller is no longer responsible for the provide
 
 The body of the constructor sets the private field based on the parameter coming in.
 
-If you are not familiar with dependency injection, you can take a look at the materials available here: [DI Why: Getting a Grip on Dependency Injection](http://www.jeremybytes.com/Demos.aspx#DI).
+*If you are not familiar with dependency injection, you can take a look at the materials available here: [DI Why: Getting a Grip on Dependency Injection](http://www.jeremybytes.com/Demos.aspx#DI).*
 
 ### Running the Application
 At this point, we can build and run the application. We'll go back to the command line for this.
@@ -1355,13 +1386,21 @@ info: Microsoft.Hosting.Lifetime[0]
 [http://localhost:9874/people](http://localhost:9874/people)
 
 ```json
-[{"id":1,"givenName":"John","familyName":"Koenig","startDate":"1975-10-17T00:00:00","rating":6,"formatString":null},{"id":2,"givenName":"Dylan","familyName":"Hunt","startDate":"2000-10-02T00:00:00","rating":8,"formatString":null},{"id":3,"givenName":"Leela","familyName":"Turanga","startDate":"1999-03-28T00:00:00","rating":8,"formatString":"{1} {0}"},{"id":4,"givenName":"John","familyName":"Crichton","startDate":"1999-03-19T00:00:00","rating":7,"formatString":null},{"id":5,"givenName":"Dave","familyName":"Lister","startDate":"1988-02-15T00:00:00","rating":9,"formatString":null},{"id":6,"givenName":"Laura","familyName":"Roslin","startDate":"2003-12-08T00:00:00","rating":6,"formatString":null},{"id":7,"givenName":"John","familyName":"Sheridan","startDate":"1994-01-26T00:00:00","rating":6,"formatString":null},{"id":8,"givenName":"Dante","familyName":"Montana","startDate":"2000-11-01T00:00:00","rating":5,"formatString":null},{"id":9,"givenName":"Isaac","familyName":"Gampu","startDate":"1977-09-10T00:00:00","rating":4,"formatString":null}]
+[{"id":1,"givenName":"John","familyName":"Koenig","startDate":"1975-10-17T00:00:00","rating":6,"formatString":null},
+{"id":2,"givenName":"Dylan","familyName":"Hunt","startDate":"2000-10-02T00:00:00","rating":8,"formatString":null},
+{"id":3,"givenName":"Leela","familyName":"Turanga","startDate":"1999-03-28T00:00:00","rating":8,"formatString":"{1} {0}"},
+{"id":4,"givenName":"John","familyName":"Crichton","startDate":"1999-03-19T00:00:00","rating":7,"formatString":null},
+{"id":5,"givenName":"Dave","familyName":"Lister","startDate":"1988-02-15T00:00:00","rating":9,"formatString":null},
+{"id":6,"givenName":"Laura","familyName":"Roslin","startDate":"2003-12-08T00:00:00","rating":6,"formatString":null},
+{"id":7,"givenName":"John","familyName":"Sheridan","startDate":"1994-01-26T00:00:00","rating":6,"formatString":null},
+{"id":8,"givenName":"Dante","familyName":"Montana","startDate":"2000-11-01T00:00:00","rating":5,"formatString":null},
+{"id":9,"givenName":"Isaac","familyName":"Gampu","startDate":"1977-09-10T00:00:00","rating":4,"formatString":null}]
 ```
 
 ### Setting Up Another Provider
 Let's set up another data provider so that we can see how this works.
 
-We will use already created code for this. In addition to the "snippets.txt" file, there are "CSVPeopleProvider.cs" and "People.txt" files.
+We will use already-created code for this. In addition to the "snippets.txt" file, there are "CSVPeopleProvider.cs" and "People.txt" files in the [Starting Files folder](https://github.com/jeremybytes/core-cli-30/tree/master/StartingFiles) of the repository.
 
 Copy "CSVPeopleProvider.cs" into the "Models" folder of the web service.
 
@@ -1371,7 +1410,7 @@ As noted above, after copying the files into the appropriate folders, they autom
 
 "CSVPeopleProvider" implements the "IPeopleProvider" interface.
 
-```c#
+```csharp
 public class CSVPeopleProvider : IPeopleProvider
 ```
 
@@ -1381,9 +1420,7 @@ One more thing we need to do is set the "People.txt" file so that it is copied t
 
 In Visual Studio, right-click on the "People.txt" file and select "Properties". Change the "Copy to Output Directory" setting to "Copy always".
 
-If you are using Visual Studio Code, you can manually change the "people-api.csproj" file to add this setting.
-
-Here is the completed project file. Note the "ItemGroup" section.
+If you are using Visual Studio Code, you can manually change the "people-api.csproj" file to add this setting. Here is the completed project file. Note the "ItemGroup" section:
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk.Web">
@@ -1405,7 +1442,7 @@ Here is the completed project file. Note the "ItemGroup" section.
 ### Updating Configuration
 Now that we have the code for the new data provider, we can change the configuration in the "Startup.cs" file.
 
-```c#
+```csharp
 public void ConfigureServices(IServiceCollection services)
 {
     services.AddControllers();
@@ -1451,11 +1488,11 @@ PS C:\CoreCLI\person-console>
 The text file has an extra record: Jeremy Awesome. So we can tell by looking at the data that the service is now getting data from the text file instead of using the hard-coded data provider.
 
 ### Fixing Broken Unit Tests
-Since we change the constructor for the controller, our unit tests no longer build.
+Since we changed the constructor for the controller, our unit tests no longer build.
 
 The problem is in the Setup method of the "PeopleControllerTests" class.
 
-```c#
+```csharp
 public class PeopleControllerTests
 {
     PeopleController controller;
@@ -1480,7 +1517,7 @@ After copying the file, rename it to "FakePeopleProvider.cs".
 
 Open the file in Visual Studio (or Visual Studio Code) and change the name of the class to "FakePeopleProvider". We will leave the rest of the class the same. In addition, we'll change the namespace to "person_api_tests".
 
-```c#
+```csharp
 namespace person_api_tests
 {
     public class FakePeopleProvider : IPeopleProvider
@@ -1497,13 +1534,13 @@ This gives us a separate class that we can use for testing. Now we have more con
 ### Updating the Tests
 To update the tests, update the "Setup" method to use the "FakePeopleProvider".
 
-```c#
-        [SetUp]
-        public void Setup()
-        {
-            var provider = new FakePeopleProvider();
-            controller = new PeopleController(provider);
-        }
+```csharp
+[SetUp]
+public void Setup()
+{
+    var provider = new FakePeopleProvider();
+    controller = new PeopleController(provider);
+}
 ```
 
 Since the "Setup" method runs before each test, all of our tests are now using the fake data provider.
