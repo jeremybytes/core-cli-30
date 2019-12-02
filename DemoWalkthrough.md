@@ -1,5 +1,6 @@
-#Get Comfortable with .NET Core and the CLI  
-#Demo Walkthrough 
+Get Comfortable with .NET Core and the CLI  
+Demo Walkthrough
+=================  
 
 By following this walkthrough, you can re-create the projects in this repository: [https://github.com/jeremybytes/core-cli-30](https://github.com/jeremybytes/core-cli-30).
 
